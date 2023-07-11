@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,6 +27,10 @@ public class cdk implements CommandExecutor, TabExecutor {
         if (command.getName().equalsIgnoreCase("cdk")) {
             switch (args[0]) {
                 case "additem":
+                    if (key == null) {
+                        sender.sendMessage("未创建兑换码！请使用/newcdk创建兑换码再进行设置");
+                        return true;
+                    }
                     if (args.length > 1) {
                         sender.sendMessage("参数错误");
                         return false;
@@ -36,6 +41,10 @@ public class cdk implements CommandExecutor, TabExecutor {
                     key.Items.add(item);
                     return true;
                 case "settime":
+                    if (key == null) {
+                        sender.sendMessage("未创建兑换码！请使用/newcdk创建兑换码再进行设置");
+                        return true;
+                    }
                     int days = Integer.parseInt(args[1]);
                     if (args.length != 2 || days > 365 || days < 0) {
                         sender.sendMessage("参数错误");
@@ -45,6 +54,10 @@ public class cdk implements CommandExecutor, TabExecutor {
                     sender.sendMessage("设置成功！兑换码时间为"+days+"天（共"+ key.EndTime + "毫秒）");
                     return true;
                 case "setname":
+                    if (key == null) {
+                        sender.sendMessage("未创建兑换码！请使用/newcdk创建兑换码再进行设置");
+                        return true;
+                    }
                     if (args.length != 2) {
                         sender.sendMessage("参数错误");
                         return false;
@@ -53,6 +66,10 @@ public class cdk implements CommandExecutor, TabExecutor {
                     sender.sendMessage("设置成功！兑换码名字为：" + key.Name);
                     return true;
                 case "setdisposable":
+                    if (key == null) {
+                        sender.sendMessage("未创建兑换码！请使用/newcdk创建兑换码再进行设置");
+                        return true;
+                    }
                     if (args.length == 2 || args[1].equalsIgnoreCase("false") || args[1].equalsIgnoreCase("true")) {
                         key.Disposable = Boolean.parseBoolean(args[1]);
                         sender.sendMessage("设置成功！兑换码一次性属性为" + key.Disposable);
@@ -61,8 +78,17 @@ public class cdk implements CommandExecutor, TabExecutor {
                     sender.sendMessage("参数错误");
                     return false;
                 case "finish":
+                    if (key == null) {
+                        sender.sendMessage("未创建兑换码！请使用/newcdk创建兑换码设置后再保存");
+                        return true;
+                    }
+                    String error = key.isOK();
+                    if (error != null){
+                        sender.sendMessage(error);
+                        return true;
+                    }
                     try {
-                        File file = new File(key.Key + ".cdk");
+                        File file = new File("plugins\\CDKey\\" + key.Key + ".cdk");
                         if (!file.exists()) {
                             file.createNewFile();// 创建目标文件
                         }
@@ -128,7 +154,7 @@ public class cdk implements CommandExecutor, TabExecutor {
                             gitem.setItemStack(i);
                         }
                         if (k.Disposable) {
-                            Files.deleteIfExists(Paths.get(k.Key + ".cdk"));
+                            Files.deleteIfExists(Paths.get("plugins\\CDKey\\" + k.Key + ".cdk"));
                         }
                         sender.sendMessage("兑换成功！奖励已以掉落物形式出现在你脚下，请注意背包空闲！");
                         return true;
@@ -136,13 +162,46 @@ public class cdk implements CommandExecutor, TabExecutor {
                         sender.sendMessage("找不到该兑换码！");
                         return true;
                     }
+                case "delete":
+                    try {
+                        Files.deleteIfExists(Paths.get("plugins\\CDKey\\" + args[1] + ".cdk"));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
             }
         }
         return false;
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        if (args.length == 1) {
+            List<String> list = new ArrayList<>();
+            list.add("additem");
+            list.add("settime");
+            list.add("setname");
+            list.add("setdisposable");
+            list.add("finish");
+            list.add("cancel");
+            list.add("use");
+            list.add("delete");
+            return list;
+        }
+        switch (args[0]){
+            case "additem":
+            case "settime":
+            case "finish":
+            case "cancel":
+            case "use":
+            case "delete":
+            case "setname": return null;
+            case "setdisposable":
+                List<String> list = new ArrayList<>();
+                list.add("true");
+                list.add("false");
+                return list;
+
+        }
         return null;
     }
 }

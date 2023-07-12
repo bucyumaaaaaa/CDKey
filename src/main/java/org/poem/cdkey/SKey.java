@@ -21,7 +21,7 @@ public class SKey implements Serializable {
         Name = key.Name;
 
         Items = new String[key.Items.size()];
-        for (int i = 0; i < key.Items.size(); i++){
+        for (int i = 0; i < key.Items.size(); i++) {
             Items[i] = itemStackSerialize(key.Items.get(i));
         }
 

@@ -18,7 +18,7 @@ public class Key implements Serializable {
         Key = key;
     }
 
-    public String isOK(){
+    public String isOK() {
         if (Key == null || Key.isEmpty()) return "字符串未设置，也许是你搞了什么奇葩，请cancel后重试";
         if (Name == null || Name.isEmpty()) return "名字未设置，请使用/setname 设置名称";
         if (Items == null) return "奖品未设置，请使用/additem 添加奖品";

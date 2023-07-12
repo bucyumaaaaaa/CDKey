@@ -10,7 +10,10 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -45,13 +48,13 @@ public class cdk implements CommandExecutor, TabExecutor {
                         sender.sendMessage("未创建兑换码！请使用/newcdk创建兑换码再进行设置");
                         return true;
                     }
-                    int days = Integer.parseInt(args[1]);
+                    double days = Double.parseDouble(args[1]);
                     if (args.length != 2 || days > 365 || days < 0) {
                         sender.sendMessage("参数错误");
                         return false;
                     }
-                    key.EndTime = System.currentTimeMillis() + days * 86400000L;
-                    sender.sendMessage("设置成功！兑换码时间为"+days+"天（共"+ key.EndTime + "毫秒）");
+                    key.EndTime = (long)(System.currentTimeMillis() + days * 86400000L);
+                    sender.sendMessage("设置成功！兑换码时间为" + days + "天（共" + key.EndTime + "毫秒）");
                     return true;
                 case "setname":
                     if (key == null) {
@@ -83,13 +86,14 @@ public class cdk implements CommandExecutor, TabExecutor {
                         return true;
                     }
                     String error = key.isOK();
-                    if (error != null){
+                    if (error != null) {
                         sender.sendMessage(error);
                         return true;
                     }
                     try {
                         File file = new File("plugins\\CDKey\\" + key.Key + ".cdk");
                         if (!file.exists()) {
+                            //noinspection ResultOfMethodCallIgnored
                             file.createNewFile();// 创建目标文件
                         }
                         ObjectOutputStream objectOutputStream = new ObjectOutputStream(Files.newOutputStream(Paths.get(file.toURI())));
@@ -119,9 +123,9 @@ public class cdk implements CommandExecutor, TabExecutor {
                         File[] files = new File("plugins\\CDKey\\").listFiles();
                         Key k = null;
                         SKey sk = null;
-                        for (File m : files) {
-                            if (m.isFile())                                //m为文件时
-                            {
+                        assert files != null;
+                            for (File m : files) {
+
                                 String name = m.getName();
                                 String extension = name.lastIndexOf(".") == -1 ? "" : name.substring(name.lastIndexOf(".") + 1);
                                 if (extension.equals("cdk"))//判断后缀是不是cdk;
@@ -136,9 +140,11 @@ public class cdk implements CommandExecutor, TabExecutor {
                                         return true;
                                     }
                                 }
-                            }
-                        }
 
+                            }
+
+
+                        assert k != null;
                         k.Disposable = sk.Disposable;
                         k.EndTime = sk.EndTime;
                         k.Name = sk.Name;
@@ -187,20 +193,11 @@ public class cdk implements CommandExecutor, TabExecutor {
             list.add("delete");
             return list;
         }
-        switch (args[0]){
-            case "additem":
-            case "settime":
-            case "finish":
-            case "cancel":
-            case "use":
-            case "delete":
-            case "setname": return null;
-            case "setdisposable":
-                List<String> list = new ArrayList<>();
-                list.add("true");
-                list.add("false");
-                return list;
-
+        if (args[0].equals("setdisposable")) {
+            List<String> list = new ArrayList<>();
+            list.add("true");
+            list.add("false");
+            return list;
         }
         return null;
     }

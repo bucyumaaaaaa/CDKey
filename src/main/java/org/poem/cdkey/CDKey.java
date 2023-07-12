@@ -7,6 +7,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.ObjectInputStream;
+import java.nio.file.Files;
 import java.util.Objects;
 
 public final class CDKey extends JavaPlugin {
@@ -18,6 +21,34 @@ public final class CDKey extends JavaPlugin {
         // Plugin startup logic
         Objects.requireNonNull(Bukkit.getPluginCommand("cdk")).setExecutor(new cdk());
         saveDefaultConfig();
+        new Thread(() -> {
+            File[] files;
+            SKey sk;
+            while(true) {
+                files = new File("plugins\\CDKey\\").listFiles();
+                assert files != null;
+                    for (File m : files) {
+                        String name = m.getName();
+                        String extension = name.lastIndexOf(".") == -1 ? "" : name.substring(name.lastIndexOf(".") + 1);
+                        if (extension.equals("cdk"))//判断后缀是不是cdk;
+                        {
+                            ObjectInputStream in;
+                            try {
+                                in = new ObjectInputStream(Files.newInputStream(m.toPath()));
+                                sk = (SKey) in.readObject();
+                                if (System.currentTimeMillis() >= sk.EndTime) {
+                                    Files.deleteIfExists(m.toPath());
+                                }
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+
+                        }
+
+                    }
+
+            }
+        }).start();
     }
 
     @Override

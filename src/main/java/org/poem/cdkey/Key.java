@@ -3,6 +3,7 @@ package org.poem.cdkey;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,7 @@ public class Key implements Serializable {
     public List<ItemStack> Items = new ArrayList<>();
     public long EndTime = -1;
     public boolean Disposable = false;
+    public BigDecimal Money;
 
     public Key(String key) {
         Key = key;
@@ -23,6 +25,7 @@ public class Key implements Serializable {
         if (Name == null || Name.isEmpty()) return "名字未设置，请使用/setname 设置名称";
         if (Items == null) return "奖品未设置，请使用/additem 添加奖品";
         if (EndTime < 0) return "未设置时间，请使用/settime 设置兑换码限时";
+        if (Money == null) return "未设置钱数，请使用/setmoney 设置钱数，为0则没有";
         return null;
     }
 }

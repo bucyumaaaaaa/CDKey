@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class SKey implements Serializable {
     private static final long serialVersionUID = 1110583069336424217L;
@@ -14,6 +15,7 @@ public class SKey implements Serializable {
     public String[] Items;
     public long EndTime;
     public boolean Disposable;
+    public BigDecimal Money;
 
     public SKey(Key key) {
         Key = key.Key;
@@ -28,6 +30,8 @@ public class SKey implements Serializable {
         EndTime = key.EndTime;
 
         Disposable = key.Disposable;
+
+        Money = key.Money;
     }
 
     private static String itemStackSerialize(ItemStack itemStack) {

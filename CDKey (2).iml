@@ -65,5 +65,11 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.ow2.asm:asm:9.4" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.ow2.asm:asm-commons:9.4" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.ow2.asm:asm-tree:9.4" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.geysermc.floodgate:api:2.2.2-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.geysermc:common:2.0.7-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.geysermc.cumulus:cumulus:1.1.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.geysermc.event:events:1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.lanternpowered:lmbda:2.0.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.github.YiC200333:XConomyAPI:2.21.4" level="project" />
   </component>
 </module>

@@ -2,6 +2,9 @@ name: CDKey
 version: '${project.version}'
 main: org.poem.cdkey.CDKey
 api-version: '1.20'
+depend:
+  - floodgate
+  - XConomy
 commands:
   newcdk:
     description: "新建一个cdk"
@@ -10,6 +13,9 @@ commands:
     permission-message: 你没有权限新建兑换码
   cdk:
     description: "cdk属性设置"
-    usage: /cdk <arguments>
+    usage: /cdk <args>
     permission: CDKey.cdk
     permission-message: 你没有权限设置兑换码
+  cdkgui:
+    description: "对于基岩版的gui适配"
+    usage: /cdkgui

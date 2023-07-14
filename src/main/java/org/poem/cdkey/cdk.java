@@ -93,6 +93,7 @@ public class cdk implements CommandExecutor, TabExecutor {
                             return false;
                         }
                         key.Money = BigDecimal.valueOf(Long.parseLong(args[1]));
+                        sender.sendMessage("设置成功！");
                         return true;
                     case "finish":
                         if (key == null) {
